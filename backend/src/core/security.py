@@ -9,10 +9,10 @@ import secrets
 from datetime import datetime, timedelta
 from typing import Any, Optional, Union
 
+from core.config import settings
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
-from src.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -357,3 +357,69 @@ def refresh_access_token(refresh_token: str) -> Token:
     except JWTError as e:
         logger.warning(f"Token refresh failed: {e}")
         raise JWTError("Invalid refresh token")
+
+
+class AuthManager:
+    """
+    Authentication manager for handling user authentication and token management
+    """
+
+    @staticmethod
+    def create_tokens(user) -> dict[str, Any]:
+        """
+        Create access and refresh tokens for a user
+
+        Args:
+            user: User object with id attribute
+
+        Returns:
+            Dictionary containing token information
+        """
+        # Ensure user_id is converted to int if it's not already
+        user_id = int(user.id) if hasattr(user, "id") else None
+
+        if user_id is None:
+            raise ValueError("User object must have an 'id' attribute")
+
+        # Create token pair using existing function
+        token_pair = create_token_pair(user_id)
+
+        return {
+            "access_token": token_pair.access_token,
+            "refresh_token": token_pair.refresh_token,
+            "token_type": token_pair.token_type,
+            "expires_in": token_pair.expires_in,
+        }
+
+    @staticmethod
+    def verify_token(token: str) -> TokenData:
+        """
+        Verify and decode a JWT token
+
+        Args:
+            token: JWT token string
+
+        Returns:
+            TokenData object
+        """
+        return decode_access_token(token)
+
+    @staticmethod
+    def refresh_token(refresh_token: str) -> dict[str, Any]:
+        """
+        Refresh an access token using a refresh token
+
+        Args:
+            refresh_token: Refresh token string
+
+        Returns:
+            Dictionary containing new token information
+        """
+        new_token = refresh_access_token(refresh_token)
+
+        return {
+            "access_token": new_token.access_token,
+            "refresh_token": new_token.refresh_token,
+            "token_type": new_token.token_type,
+            "expires_in": new_token.expires_in,
+        }

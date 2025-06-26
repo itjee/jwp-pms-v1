@@ -9,6 +9,7 @@ from decimal import Decimal
 from enum import Enum as PyEnum
 from typing import TYPE_CHECKING, List, Optional
 
+from core.constants import ProjectMemberRole, ProjectPriority, ProjectStatus
 from core.database import Base
 from sqlalchemy import (
     Boolean,
@@ -30,37 +31,6 @@ if TYPE_CHECKING:
     from models.calendar import Event
     from models.task import Task
     from models.user import User
-
-
-class ProjectStatus(PyEnum):
-    """Project status enumeration"""
-
-    PLANNING = "planning"  # Project is in planning phase
-    IN_PROGRESS = "in_progress"  # Project is currently being worked on
-    ON_HOLD = "on_hold"  # Project is temporarily paused
-    COMPLETED = "completed"  # Project has been completed
-    CANCELLED = "cancelled"  # Project has been cancelled
-
-
-class ProjectPriority(PyEnum):
-    """Project priority enumeration"""
-
-    LOW = "low"  # Low priority project
-    MEDIUM = "medium"  # Medium priority project
-    HIGH = "high"  # High priority project
-    URGENT = "urgent"  # Urgent priority project
-
-
-class ProjectMemberRole(PyEnum):
-    """Project member role enumeration"""
-
-    OWNER = "owner"  # Project owner with full permissions
-    MANAGER = "manager"  # Project manager with management permissions
-    DEVELOPER = "developer"  # Developer with task assignment permissions
-    TESTER = "tester"  # Tester with testing permissions
-    ANALYST = "analyst"  # Analyst with analysis permissions
-    CONTRIBUTOR = "contributor"  # Contributor with limited permissions
-    VIEWER = "viewer"  # Viewer with read-only permissions
 
 
 class Project(Base):
@@ -109,13 +79,13 @@ class Project(Base):
 
     # Status and Priority
     status = Column(
-        Enum(ProjectStatus),
+        String(20),  # Enum(ProjectStatus),
         default=ProjectStatus.PLANNING,
         nullable=False,
         doc="Project status",
     )
     priority = Column(
-        Enum(ProjectPriority),
+        String(20),  # Enum(ProjectPriority),
         default=ProjectPriority.MEDIUM,
         nullable=False,
         doc="Project priority",
@@ -255,7 +225,7 @@ class ProjectMember(Base):
     )
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, doc="User ID")
     role = Column(
-        Enum(ProjectMemberRole),
+        String(20),  # Enum(ProjectMemberRole),
         default=ProjectMemberRole.DEVELOPER,
         nullable=False,
         doc="Member role in the project",

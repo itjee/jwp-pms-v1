@@ -5,13 +5,19 @@ SQLAlchemy models for user management and authentication.
 """
 
 from datetime import datetime
-from enum import Enum as PyEnum
 from typing import TYPE_CHECKING, List
 
+from core.constants import UserRole, UserStatus
 from core.database import Base
-from sqlalchemy import Boolean, Column, DateTime
-from sqlalchemy import Enum as SQLEnum  # type: ignore
-from sqlalchemy import Integer, String, Text, UniqueConstraint
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -21,33 +27,6 @@ if TYPE_CHECKING:
     from models.task import Task, TaskAssignment
 
 
-class UserRole(PyEnum):
-    """User role enumeration"""
-
-    ADMIN = "admin"  # Represents an administrator with full access
-    MANAGER = (
-        "manager"  # Represents a project or team manager with elevated permissions
-    )
-    DEVELOPER = "developer"  # Represents a developer with standard permissions
-    TESTER = "tester"  # Represents a tester with permissions to test and report issues
-    GUEST = "guest"  # Represents a guest user with limited access
-    CONTRIBUTOR = "contributor"  # Represents a user who can contribute content
-    VIEWER = (
-        "viewer"  # Represents a user who can only view content without making changes
-    )
-
-
-class UserStatus(PyEnum):
-    """User status enumeration"""
-
-    ACTIVE = "active"  # Represents an active user account
-    INACTIVE = "inactive"  # Represents an inactive user account
-    SUSPENDED = "suspended"  # Represents a suspended user account
-    PENDING = (
-        "pending"  # Represents a user account that is pending activation or approval
-    )
-
-
 class User(Base):
     """
     User model for authentication and profile management
@@ -55,13 +34,11 @@ class User(Base):
 
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, Index=True, doc="User ID")
+    id = Column(Integer, primary_key=True, index=True, doc="User ID")
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    created_by = Column(String(100), nullable=True, doc="User who created this record")
+    created_by = Column(Integer, nullable=True, doc="User who created this record")
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    updated_by = Column(
-        String(100), nullable=True, doc="User who last updated this record"
-    )
+    updated_by = Column(Integer, nullable=True, doc="User who last updated this record")
 
     # Basic Information
     name = Column(
@@ -89,13 +66,13 @@ class User(Base):
 
     # Profile Information
     role = Column(
-        SQLEnum(UserRole),
+        String(20),  # SQLEnum(UserRole),
         default=UserRole.DEVELOPER,
         nullable=False,
         doc="User role in the system",
     )
     status = Column(
-        SQLEnum(UserStatus),
+        String(20),  # SQLEnum(UserStatus),
         default=UserStatus.PENDING,
         nullable=False,
         doc="User account status",
@@ -144,11 +121,27 @@ class User(Base):
     # Constraints
     __table_args__ = (
         UniqueConstraint("email", name="ux_users_email"),
-        UniqueConstraint("username", name="ux_users_name"),
+        UniqueConstraint("name", name="ux_users_name"),
     )
 
     def __repr__(self) -> str:
         return f"<User(id={self.id}, name='{self.name}', email='{self.email}')>"
+
+    def update_last_active(self):
+        """Update the last active timestamp to the current time"""
+        self.last_active = datetime.utcnow()
+
+    def is_admin(self) -> bool:
+        """Check if user is admin"""
+        return self.role in [UserRole.ADMIN]
+
+    def is_manager_or_admin(self) -> bool:
+        """Check if user is manager or admin"""
+        return self.role in [UserRole.ADMIN, UserRole.MANAGER]
+
+    def can_manage_users(self) -> bool:
+        """Check if user can manage other users"""
+        return self.role in [UserRole.ADMIN]
 
 
 class UserActivityLog(Base):
@@ -165,9 +158,7 @@ class UserActivityLog(Base):
         server_default=func.now(),
         doc="Timestamp of the log entry",
     )
-    created_by = Column(
-        String(100), nullable=True, doc="User who created this log entry"
-    )
+    created_by = Column(Integer, nullable=True, doc="User who created this log entry")
 
     user_id = Column(
         Integer, nullable=False, index=True, doc="User ID who performed the action"
@@ -195,7 +186,7 @@ class UserActivityLog(Base):
 
     user_agent = Column(String(500), nullable=True, doc="User agent string")
 
-    metadata = Column(Text, nullable=True, doc="Additional metadata as JSON string")
+    extra_data = Column(Text, nullable=True, doc="Additional metadata as JSON string")
 
     # Relationships
     user = relationship("User", back_populates="activity_logs")
@@ -213,7 +204,7 @@ class UserSession(Base):
 
     id = Column(Integer, primary_key=True, index=True, doc="Session ID")
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    created_by = Column(String(100), nullable=True, doc="User who created this session")
+    created_by = Column(Integer, nullable=True, doc="User who created this session")
 
     user_id = Column(String(50), nullable=False, index=True, doc="User ID")
     session_token = Column(

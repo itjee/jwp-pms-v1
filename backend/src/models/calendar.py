@@ -4,17 +4,23 @@ Calendar Models
 SQLAlchemy models for calendar and event management.
 """
 
+import re
 from datetime import datetime, timedelta
-from enum import Enum as PyEnum
 from typing import TYPE_CHECKING, List, Optional
 
+from core.constants import (
+    EventAttendeeStatus,
+    EventReminder,
+    EventStatus,
+    EventType,
+    RecurrenceType,
+)
 from core.database import Base
 from sqlalchemy import (
     Boolean,
     CheckConstraint,
     Column,
     DateTime,
-    Enum,
     ForeignKey,
     Integer,
     String,
@@ -29,40 +35,6 @@ if TYPE_CHECKING:
     from models.user import User
 
 
-class EventType(PyEnum):
-    """Event type enumeration"""
-
-    MEETING = "meeting"  # Represents a meeting event
-    DEADLINE = "deadline"  # Represents a deadline event
-    MILESTONE = "milestone"  # Represents a milestone event
-    REMINDER = "reminder"  # Represents a reminder event
-    HOLIDAY = "holiday"  # Represents a holiday event
-    PERSONAL = "personal"  # Represents a personal event
-    PROJECT = "project"  # Represents a project-related event
-    TASK = "task"  # Represents a task-related event
-
-
-class EventStatus(PyEnum):
-    """Event status enumeration"""
-
-    SCHEDULED = "scheduled"  # Represents a scheduled event
-    TENTATIVE = "tentative"  # Represents an event that is not confirmed
-    IN_PROGRESS = "in_progress"  # Represents an event that is currently happening
-    COMPLETED = "completed"  # Represents a completed event
-    CANCELLED = "cancelled"  # Represents a cancelled event
-    POSTPONED = "postponed"  # Represents an event that has been postponed
-
-
-class RecurrenceType(PyEnum):
-    """Recurrence type enumeration"""
-
-    NONE = "none"  # No recurrence
-    DAILY = "daily"  # Daily recurrence
-    WEEKLY = "weekly"  # Weekly recurrence
-    MONTHLY = "monthly"  # Monthly recurrence
-    YEARLY = "yearly"  # Yearly recurrence
-
-
 class Calendar(Base):
     """
     Calendar model for organizing events
@@ -74,14 +46,12 @@ class Calendar(Base):
     created_at = Column(
         DateTime(timezone=True), server_default=func.now(), doc="Creation time"
     )
-    created_by = Column(
-        String(100), nullable=True, doc="User who created this calendar"
-    )
+    created_by = Column(Integer, nullable=True, doc="User who created this calendar")
     updated_at = Column(
         DateTime(timezone=True), onupdate=func.now(), doc="Last update time"
     )
     updated_by = Column(
-        String(100), nullable=True, doc="User who last updated this calendar"
+        Integer, nullable=True, doc="User who last updated this calendar"
     )
 
     # Basic Information
@@ -129,13 +99,11 @@ class Event(Base):
     created_at = Column(
         DateTime(timezone=True), server_default=func.now(), doc="Creation time"
     )
-    created_by = Column(String(100), nullable=True, doc="User who created this event")
+    created_by = Column(Integer, nullable=True, doc="User who created this event")
     updated_at = Column(
         DateTime(timezone=True), onupdate=func.now(), doc="Last update time"
     )
-    updated_by = Column(
-        String(100), nullable=True, doc="User who last updated this event"
-    )
+    updated_by = Column(Integer, nullable=True, doc="User who last updated this event")
 
     # Basic Information
     title = Column(String(200), nullable=False, doc="Event title")
@@ -156,10 +124,13 @@ class Event(Base):
 
     # Status and Type
     event_type = Column(
-        Enum(EventType), default=EventType.MEETING, nullable=False, doc="Event type"
+        String(20),  # Enum(EventType),
+        default=EventType.MEETING,
+        nullable=False,
+        doc="Event type",
     )
     status = Column(
-        Enum(EventStatus),
+        String(20),  # Enum(EventStatus),
         default=EventStatus.SCHEDULED,
         nullable=False,
         doc="Event status",
@@ -184,7 +155,7 @@ class Event(Base):
 
     # Recurrence
     recurrence_type = Column(
-        Enum(RecurrenceType),
+        String(20),  # Enum(RecurrenceType),
         default=RecurrenceType.NONE,
         nullable=False,
         doc="Recurrence pattern",
@@ -206,6 +177,13 @@ class Event(Base):
     )
 
     # Notification
+    reminder_type = Column(
+        String(20),  # Enum(EventReminder),
+        default=EventReminder.NONE,
+        nullable=False,
+        doc="Reminder type (e.g., email, push notification)",
+    )
+
     reminder_minutes = Column(
         Integer, nullable=True, doc="Reminder time in minutes before event"
     )
@@ -264,13 +242,13 @@ class EventAttendee(Base):
         DateTime(timezone=True), server_default=func.now(), doc="Creation time"
     )
     created_by = Column(
-        String(100), nullable=True, doc="User who created this attendee record"
+        Integer, nullable=True, doc="User who created this attendee record"
     )
     updated_at = Column(
         DateTime(timezone=True), onupdate=func.now(), doc="Last update time"
     )
     updated_by = Column(
-        String(100), nullable=True, doc="User who last updated this attendee record"
+        Integer, nullable=True, doc="User who last updated this attendee record"
     )
 
     # Basic Information
@@ -281,7 +259,7 @@ class EventAttendee(Base):
     )
     status = Column(
         String(20),
-        default="invited",
+        default=EventAttendeeStatus.INVITED,
         nullable=False,
         doc="Attendance status (invited, accepted, declined, tentative)",
     )

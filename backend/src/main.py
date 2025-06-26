@@ -205,12 +205,37 @@ async def api_info():
     )
 
 
+from api.auth import router as auth_router
+from api.calendar import router as calendar_router
+from api.dashboard import router as dashboard_router
+
 # Include API routes
 from api.health import router as health_router
+from api.projects import router as projects_router
 from api.system import router as system_router
+from api.tasks import router as tasks_router
+from api.uploads import router as uploads_router
+from api.users import router as users_router
 
 app.include_router(health_router, prefix=settings.API_V1_STR, tags=["health"])
 app.include_router(system_router, prefix=settings.API_V1_STR, tags=["system"])
+app.include_router(
+    auth_router, prefix=f"{settings.API_V1_STR}/auth", tags=["authentication"]
+)
+app.include_router(users_router, prefix=f"{settings.API_V1_STR}/users", tags=["users"])
+app.include_router(
+    projects_router, prefix=f"{settings.API_V1_STR}/projects", tags=["projects"]
+)
+app.include_router(tasks_router, prefix=f"{settings.API_V1_STR}/tasks", tags=["tasks"])
+app.include_router(
+    calendar_router, prefix=f"{settings.API_V1_STR}/calendar", tags=["calendar"]
+)
+app.include_router(
+    dashboard_router, prefix=f"{settings.API_V1_STR}/dashboard", tags=["dashboard"]
+)
+app.include_router(
+    uploads_router, prefix=f"{settings.API_V1_STR}/uploads", tags=["uploads"]
+)
 
 # TODO: Add these when implemented
 # from src.api.auth import router as auth_router

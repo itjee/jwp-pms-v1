@@ -5,16 +5,15 @@ SQLAlchemy models for task management.
 """
 
 from datetime import datetime
-from enum import Enum as PyEnum
 from typing import TYPE_CHECKING, List, Optional
 
+from core.constants import TaskPriority, TaskStatus, TaskType
 from core.database import Base
 from sqlalchemy import (
     Boolean,
     CheckConstraint,
     Column,
     DateTime,
-    Enum,
     ForeignKey,
     Integer,
     String,
@@ -28,47 +27,6 @@ if TYPE_CHECKING:
     from models.calendar import Event
     from models.project import Project
     from models.user import User
-
-
-class TaskStatus(PyEnum):
-    """Task status enumeration"""
-
-    # Task status values
-    TODO = "todo"  # Task is yet to be started
-    IN_PROGRESS = "in_progress"  # Task is currently being worked on
-    IN_REVIEW = "in_review"  # Task is under review
-    TESTING = "testing"  # Task is being tested
-    DONE = "done"  # Task is completed
-    BLOCKED = "blocked"  # Task is blocked and cannot proceed
-    ON_HOLD = "on_hold"  # Task is on hold and not actively worked on
-    # Task has been cancelled and will not be completed
-    CANCELLED = "cancelled"  # Task has been cancelled and will not be completed
-
-
-class TaskPriority(PyEnum):
-    """Task priority enumeration"""
-
-    LOW = "low"  # Low priority task
-    MEDIUM = "medium"  # Medium priority task
-    HIGH = "high"  # High priority task
-    URGENT = "urgent"  # Urgent priority task
-
-
-class TaskType(PyEnum):
-    """Task type enumeration"""
-
-    FEATURE = "feature"  # New feature development
-    BUG = "bug"  # Bug fix or issue resolution
-    TASK = "task"  # General task or activity
-    ENHANCEMENT = "enhancement"  # Improvement or enhancement of existing functionality
-    IMPROVEMENT = "improvement"  # General improvement task
-    REFACTORING = "refactoring"  # Code refactoring or restructuring
-    DEBT = "debt"  # Technical debt or backlog item
-    RESEARCH = "research"  # Research or investigation task
-    DOCUMENTATION = "documentation"  # Documentation task
-    SUPPORT = "support"  # Support or maintenance task
-    TESTING = "testing"  # Testing or quality assurance task
-    MAINTENANCE = "maintenance"  # Maintenance task
 
 
 class Task(Base):
@@ -107,22 +65,23 @@ class Task(Base):
     description = Column(Text, nullable=True, doc="Task description")
 
     # Status and Priority
+    # Enum(TaskStatus)
     status = Column(
-        Enum(TaskStatus),
+        String(20),
         default=TaskStatus.TODO,
         nullable=False,
         index=True,
         doc="Task status",
     )
     priority = Column(
-        Enum(TaskPriority),
+        String(20),
         default=TaskPriority.MEDIUM,
         nullable=False,
         index=True,
         doc="Task priority",
     )
     task_type = Column(
-        Enum(TaskType), default=TaskType.FEATURE, nullable=False, doc="Task type"
+        String(20), default=TaskType.FEATURE, nullable=False, doc="Task type"
     )
 
     # Project Association
