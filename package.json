@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "dev:backend": "cd backend && uv run uvicorn main:app --reload",
+    "dev:frontend": "cd frontend && npm start",
+    "install:backend": "cd backend && uv sync",
+    "install:frontend": "cd frontend && npm install"
+  }
+}

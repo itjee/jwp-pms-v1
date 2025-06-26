@@ -1,0 +1,35 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiofiles>=24.1.0",
+    "alembic>=1.16.2",
+    "asyncpg>=0.30.0",
+    "celery>=5.5.3",
+    "fastapi[all]>=0.115.13",
+    "flake8>=7.3.0",
+    "mypy>=1.16.1",
+    "passlib[bcrypt]>=1.7.4",
+    "pillow>=11.2.1",
+    "pydantic>=2.11.7",
+    "pydantic-settings>=2.10.1",
+    "pytest-asyncio>=1.0.0",
+    "python-jose[cryptography]>=3.5.0",
+    "requests>=2.32.4",
+    "sqlalchemy>=2.0.41",
+    "strawberry-graphql>=0.275.2",
+    "structlog>=25.4.0",
+    "types-passlib>=1.7.7.20250602",
+    "types-python-jose>=3.5.0.20250531",
+    "uvicorn>=0.34.3",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "isort>=6.0.1",
+    "pytest>=8.4.1",
+]

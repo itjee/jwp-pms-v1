@@ -1,0 +1,55 @@
+{
+    "python.defaultInterpreterPath": "./backend/.venv/Scripts/python.exe",
+    "python.terminal.activateEnvironment": true,
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.analysis.extraPaths": [
+        "./backend/src",
+        "./backend"
+    ],
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.autoImportCompletions": true,
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.formatting.provider": "black",
+    "python.sortImports.args": ["--profile", "black"],
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/*.pyc": true,
+        "**/*.pyo": true,
+        "**/node_modules": true,
+        "**/.git": true,
+        ".venv": false
+    },
+    "python.envFile": "./backend/.env",
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.cwd": "./backend",
+    "terminal.integrated.env.windows": {
+        "PYTHONPATH": "./backend/src;./backend"
+    },
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "files.autoSave": "onWindowChange",
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true
+    },
+    "cSpell.words": [
+        "addinivalue",
+        "autoflush",
+        "fromlist",
+        "letmein",
+        "onupdate",
+        "poolclass",
+        "redoc",
+        "sessionmaker",
+        "trustedhost",
+        "uvicorn"
+    ]
+}
