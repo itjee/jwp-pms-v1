@@ -8,12 +8,15 @@ import logging
 from datetime import datetime
 from typing import Optional
 
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.responses import JSONResponse
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from core.config import settings
 from core.database import get_async_session
 from core.dependencies import get_current_active_user
 from core.security import AuthManager, get_password_hash, verify_password
-from fastapi import APIRouter, Depends, HTTPException, Request, status
-from fastapi.responses import JSONResponse
 from models.user import User, UserRole, UserStatus
 from schemas.auth import (
     LoginRequest,
@@ -24,8 +27,6 @@ from schemas.auth import (
     UserResponse,
 )
 from services.user import UserService
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

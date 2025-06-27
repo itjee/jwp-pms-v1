@@ -11,13 +11,14 @@ from pathlib import Path
 from typing import AsyncGenerator
 
 import uvicorn
-from core.config import settings
-from core.database import check_database_connection, create_tables
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
+
+from core.config import settings
+from core.database import check_database_connection, create_tables
 from utils.logger import setup_logging
 
 # Setup logging

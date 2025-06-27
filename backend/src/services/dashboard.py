@@ -7,14 +7,15 @@ Business logic for dashboard analytics and summary.
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, cast
 
+from sqlalchemy import and_, func, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from core.constants import TaskStatus
 from core.database import get_async_session
 from models.calendar import Event
 from models.project import Project, ProjectMember
 from models.task import Task, TaskAssignment
 from models.user import UserActivityLog
-from sqlalchemy import and_, func, select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class DashboardService:

@@ -9,9 +9,10 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from core.config import settings
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
+
+from core.config import settings
 
 router = APIRouter()
 

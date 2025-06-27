@@ -9,8 +9,6 @@ from decimal import Decimal
 from enum import Enum as PyEnum
 from typing import TYPE_CHECKING, List, Optional
 
-from core.constants import ProjectMemberRole, ProjectPriority, ProjectStatus
-from core.database import Base
 from sqlalchemy import (
     Boolean,
     CheckConstraint,
@@ -26,6 +24,9 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+
+from core.constants import ProjectMemberRole, ProjectPriority, ProjectStatus
+from core.database import Base
 
 if TYPE_CHECKING:
     from models.calendar import Event

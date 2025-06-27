@@ -8,11 +8,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional, cast
 
+from sqlalchemy import and_, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from core.database import get_async_session
 from models.project import ProjectAttachment, ProjectMember
 from models.task import TaskAttachment
-from sqlalchemy import and_, select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class FileService:

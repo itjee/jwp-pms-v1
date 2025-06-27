@@ -9,10 +9,11 @@ import secrets
 from datetime import datetime, timedelta
 from typing import Any, Optional, Union
 
-from core.config import settings
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
+
+from core.config import settings
 
 logger = logging.getLogger(__name__)
 

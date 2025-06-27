@@ -6,6 +6,10 @@ System health monitoring endpoints.
 
 from datetime import datetime
 
+from fastapi import APIRouter, Depends
+from fastapi.responses import JSONResponse
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from core.config import settings
 from core.database import get_async_session
 from core.db_utils import (
@@ -13,9 +17,6 @@ from core.db_utils import (
     get_database_stats,
     test_database_operations,
 )
-from fastapi import APIRouter, Depends
-from fastapi.responses import JSONResponse
-from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 

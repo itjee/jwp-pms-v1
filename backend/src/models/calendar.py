@@ -8,14 +8,6 @@ import re
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, List, Optional
 
-from core.constants import (
-    EventAttendeeStatus,
-    EventReminder,
-    EventStatus,
-    EventType,
-    RecurrenceType,
-)
-from core.database import Base
 from sqlalchemy import (
     Boolean,
     CheckConstraint,
@@ -28,6 +20,15 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+
+from core.constants import (
+    EventAttendeeStatus,
+    EventReminder,
+    EventStatus,
+    EventType,
+    RecurrenceType,
+)
+from core.database import Base
 
 if TYPE_CHECKING:
     from models.project import Project

@@ -7,9 +7,11 @@ Project management endpoints.
 import logging
 from typing import List, Optional
 
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from core.database import get_async_session
 from core.dependencies import get_current_active_user
-from fastapi import APIRouter, Depends, HTTPException, Query, status
 from models.user import User
 from schemas.projects import (
     ProjectCreateRequest,
@@ -18,7 +20,6 @@ from schemas.projects import (
     ProjectUpdateRequest,
 )
 from services.project_service import ProjectService
-from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

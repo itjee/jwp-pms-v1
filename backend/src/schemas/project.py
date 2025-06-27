@@ -8,8 +8,9 @@ from datetime import datetime
 from decimal import Decimal
 from typing import List, Optional
 
-from core.constants import ProjectPriority, ProjectStatus
 from pydantic import BaseModel, Field, validator
+
+from core.constants import ProjectPriority, ProjectStatus
 from schemas.user import UserPublic
 
 

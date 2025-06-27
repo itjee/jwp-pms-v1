@@ -9,6 +9,10 @@ from datetime import datetime, timedelta
 from typing import List, Optional, cast
 
 from anyio import create_unix_datagram_socket
+from sqlalchemy import and_, desc, func, or_, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
 from core.config import settings
 from core.constants import UserRole, UserStatus
 from core.database import get_async_session
@@ -21,9 +25,6 @@ from schemas.user import (
     UserStatsResponse,
     UserUpdate,
 )
-from sqlalchemy import and_, desc, func, or_, select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 from utils.auth import get_password_hash, verify_password
 from utils.exceptions import (
     AuthenticationError,

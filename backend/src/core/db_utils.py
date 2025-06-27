@@ -7,9 +7,10 @@ Helper functions for database operations and health checks.
 import logging
 from typing import Any, Dict, Optional
 
-from core.database import AsyncSessionLocal, engine
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from core.database import AsyncSessionLocal, engine
 
 logger = logging.getLogger(__name__)
 

@@ -7,11 +7,12 @@ SQLAlchemy async database setup for PostgreSQL.
 import logging
 from typing import AsyncGenerator
 
-from core.config import get_database_url
 from sqlalchemy import MetaData, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.pool import NullPool
+
+from core.config import get_database_url
 
 logger = logging.getLogger(__name__)
 
@@ -72,12 +73,12 @@ async def create_tables():
     try:
         async with engine.begin() as conn:
             # Import all models to register them with Base
-            from models import (  # noqa
+            from models import (
                 Calendar,
                 Event,
                 Project,
                 Task,
-                User,
+                User,  # noqa
                 calendar,
                 project,
                 task,
@@ -124,7 +125,8 @@ def get_sync_engine():
     """
     Get synchronous engine for Alembic migrations
     """
-    from core.config import get_sync_database_url
     from sqlalchemy import create_engine
+
+    from core.config import get_sync_database_url
 
     return create_engine(get_sync_database_url())

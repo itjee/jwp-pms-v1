@@ -8,6 +8,10 @@ import logging
 from datetime import datetime, timedelta
 from typing import List, Optional
 
+from sqlalchemy import and_, desc, func, or_, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
 from core.database import get_async_session
 from models.project import (
     Project,
@@ -27,9 +31,6 @@ from schemas.project import (
     ProjectStatsResponse,
     ProjectUpdate,
 )
-from sqlalchemy import and_, desc, func, or_, select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 from utils.exceptions import (
     AuthorizationError,
     ConflictError,

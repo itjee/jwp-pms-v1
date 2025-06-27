@@ -7,14 +7,15 @@ Common dependencies for authentication, database, and permissions.
 import logging
 from typing import Generator, Optional
 
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from core.config import settings
 from core.database import get_async_session
 from core.security import TokenData, decode_access_token
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from models.user import User, UserRole
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = logging.getLogger(__name__)
 

@@ -7,14 +7,15 @@ User management endpoints for administrators.
 import logging
 from typing import List, Optional
 
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from core.database import get_async_session
 from core.dependencies import get_current_active_user, require_admin
-from fastapi import APIRouter, Depends, HTTPException, Query, status
 from models.user import User, UserRole, UserStatus
 from schemas.auth import UserResponse
 from schemas.users import UserCreateRequest, UserUpdateRequest
 from services.user_service import UserService
-from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

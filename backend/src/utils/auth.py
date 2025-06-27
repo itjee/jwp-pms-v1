@@ -10,12 +10,13 @@ from typing import Any, Dict, List, Optional, Union
 
 import bcrypt
 import jwt
-from core.config import settings
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import ExpiredSignatureError, InvalidTokenError
-from models.user import User
 from passlib.context import CryptContext
+
+from core.config import settings
+from models.user import User
 from schemas.auth import TokenData
 
 logger = logging.getLogger(__name__)

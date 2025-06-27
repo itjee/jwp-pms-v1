@@ -8,8 +8,9 @@ Request/Response schemas for user management.
 from datetime import datetime
 from typing import List, Optional
 
-from core.constants import UserRole, UserStatus
 from pydantic import BaseModel, EmailStr, Field, validator
+
+from core.constants import UserRole, UserStatus
 
 
 class UserBase(BaseModel):

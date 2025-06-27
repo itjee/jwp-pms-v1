@@ -9,6 +9,10 @@ import logging
 from datetime import datetime, timedelta
 from typing import List, Optional, cast
 
+from sqlalchemy import and_, desc, func, or_, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
 from core.database import get_async_session
 from models.project import Project, ProjectMember
 from models.task import (
@@ -32,9 +36,6 @@ from schemas.task import (
     TaskStatsResponse,
     TaskUpdate,
 )
-from sqlalchemy import and_, desc, func, or_, select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 from utils.exceptions import (
     AuthorizationError,
     ConflictError,
